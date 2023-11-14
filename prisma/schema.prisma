@@ -1,0 +1,88 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum Role {
+  User
+  ADMIN
+}
+
+enum AppointmentStatus {
+  PENDING
+  CANCELLED
+  DECLINED
+  APPROVED
+  COMPLETED
+  MISSED
+}
+
+model User {
+  id               Int      @id @default(autoincrement())
+  email            String   @unique
+  passwordHash     String
+  firstName        String
+  middleName       String?
+  lastName         String
+  gender           Gender
+  dob              DateTime
+  address          String
+  phone            BigInt
+  emergencyContact BigInt?
+  patient          Patient?
+  doctor           Doctor?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  ipAddress        String
+  role             Role     @default(User)
+}
+
+model Patient {
+  user             User            @relation(fields: [userId], references: [id])
+  userId           Int             @unique
+  insuranceDetails String?
+  medicalDetails   MedicalDetails?
+  appointments     Appointment[]
+}
+
+model Doctor {
+  user         User          @relation(fields: [userId], references: [id])
+  userId       Int           @unique
+  specialty    String        @default("Physician")
+  appointments Appointment[]
+}
+
+model Appointment {
+  id        Int               @id @default(autoincrement())
+  doctor    Doctor            @relation(fields: [doctorId], references: [userId])
+  doctorId  Int
+  patient   Patient           @relation(fields: [patientId], references: [userId])
+  patientId Int
+  reason    String
+  scheduled DateTime
+  roomNo    Int
+  status    AppointmentStatus
+}
+
+model MedicalDetails {
+  id           Int      @id @default(autoincrement())
+  patient      Patient  @relation(fields: [patientId], references: [userId])
+  patientId    Int      @unique
+  bloodType    String
+  weight       Float
+  diagnosis    String[]
+  pescriptions String[]
+  allergies    String[]
+}
