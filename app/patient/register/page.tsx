@@ -1,7 +1,7 @@
 export default function Login() {
   return (
     <main className="">
-      <form method="POST" action="/login/api" className="flex flex-col">
+      <form method="POST" action="/patient/register/api" className="flex flex-col">
         <h1>Register As Patient</h1>
 
         <fieldset>
@@ -16,7 +16,8 @@ export default function Login() {
 
         <label>
           Gender
-          <select name="gender">
+          <select name="gender" required>
+            <option>Select...</option>
             <option>Male</option>
             <option>Female</option>
           </select>

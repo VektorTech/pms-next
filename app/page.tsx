@@ -1,9 +1,7 @@
-import { useRouter } from "next/router";
+import { redirect } from "next/navigation";
 
 export default function Home() {
-  const router = useRouter();
-
-  router.replace("/login");
+  redirect("/login");
 
   return (
     <main className="">
