@@ -57,8 +57,8 @@ export default async function RegisterDoctor() {
         <label>
           Gender
           <select name="gender" required>
-            <option>Male</option>
-            <option>Female</option>
+            <option value="MALE">Male</option>
+            <option value="FEMALE">Female</option>
           </select>
         </label>
 

@@ -44,9 +44,9 @@ export default async function AccountDetails() {
 
         <label>
           Gender
-          <select name="gender" required>
-            <option selected={user.gender == "MALE"}>Male</option>
-            <option selected={user.gender == "FEMALE"}>Female</option>
+          <select name="gender" required value={user.gender}>
+            <option value="MALE">Male</option>
+            <option value="FEMALE">Female</option>
           </select>
         </label>
 
