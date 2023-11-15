@@ -1,12 +1,7 @@
-"use client";
-
 export default function Login() {
   return (
     <main className="">
       <form
-        onSubmit={() => {
-          window.location.href = "/patient/appointments";
-        }}
         method="POST"
         action="/patient/register/api"
         className="flex flex-col"

@@ -29,18 +29,14 @@ export async function POST(request: Request) {
     email,
     password,
   } = schema.parse(await request.formData());
-
   const isRegistered = !!(await prisma.user.count({ where: { email } }));
-
   if (isRegistered) {
     return Response.json(
       { message: "User Already Registered. Please Login." },
       { status: 409 }
     );
   }
-
   const encryptPassword = await bcrypt.hash(password, 10);
-
   const newUser = await prisma.user.create({
     data: {
       email,
@@ -57,28 +53,25 @@ export async function POST(request: Request) {
         "",
     },
   });
-
   await prisma.patient.create({
     data: {
       userId: newUser.id,
     },
   });
-
   const jwtToken = jwt.sign(
-    { user_id: newUser.id, email },
+    { user_id: newUser.id, email, type: "patient-user" },
     process.env.JWT_SECRET!,
     {
       expiresIn: "1h",
     }
   );
-
   return Response.json(
     { message: "Successfully created" },
     {
       status: 302,
       headers: {
-        Location: "/patient/appointments",
-        "Set-Cookie": `session_id=${jwtToken}; Path=/patient; HTTPOnly; SameSite=Strict; Secure`,
+        Location: "/patient",
+        "Set-Cookie": `session_id=${jwtToken}; Path=/; HTTPOnly; SameSite=Strict; Secure`,
       },
     }
   );
