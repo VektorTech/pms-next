@@ -18,7 +18,7 @@ export default async function AccountDetails() {
               type="text"
               name="firstName"
               placeholder="First Name"
-              value={user.firstName}
+              defaultValue={user.firstName}
             />
           </label>
 
@@ -27,7 +27,7 @@ export default async function AccountDetails() {
               type="text"
               name="middleName"
               placeholder="Middle Name"
-              value={user.middleName ?? ""}
+              defaultValue={user.middleName ?? ""}
             />
           </label>
 
@@ -37,7 +37,7 @@ export default async function AccountDetails() {
               name="lastName"
               required
               placeholder="Last Name"
-              value={user.lastName}
+              defaultValue={user.lastName}
             />
           </label>
         </fieldset>
@@ -53,7 +53,7 @@ export default async function AccountDetails() {
         <label>
           Birth Day
           <input
-            value={user.dob.toISOString().split("T")[0]}
+            defaultValue={user.dob.toISOString().split("T")[0]}
             type="date"
             name="dateOfBirth"
             required
@@ -62,9 +62,11 @@ export default async function AccountDetails() {
 
         <label>
           Address
-          <textarea name="address" required>
-            {user.address}
-          </textarea>
+          <textarea
+            defaultValue={user.address}
+            name="address"
+            required
+          ></textarea>
         </label>
 
         <label>
@@ -73,7 +75,7 @@ export default async function AccountDetails() {
             name="phone"
             pattern="[0-9]+"
             placeholder="Phone"
-            value={user.phone.toString()}
+            defaultValue={user.phone.toString()}
             required
           />
         </label>
@@ -82,7 +84,7 @@ export default async function AccountDetails() {
 
         <label>
           <input
-            value={user.email}
+            defaultValue={user.email}
             type="email"
             name="email"
             placeholder="Email"
@@ -100,7 +102,7 @@ export default async function AccountDetails() {
           />
         </label>
 
-        <input type="submit" value="Register" />
+        <input type="submit" defaultValue="Register" />
       </form>
     </main>
   );

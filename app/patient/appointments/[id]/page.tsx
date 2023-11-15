@@ -24,19 +24,19 @@ export default async function AppointmentDetails({
           Patient
           <input
             readOnly
-            value={`${appointment.patient.user.firstName} ${appointment.patient.user.lastName}`}
+            defaultValue={`${appointment.patient.user.firstName} ${appointment.patient.user.lastName}`}
           />
         </label>
         <label>
           Doctor
           <input
             readOnly
-            value={`${appointment.doctor.user.firstName} ${appointment.doctor.user.lastName}`}
+            defaultValue={`${appointment.doctor.user.firstName} ${appointment.doctor.user.lastName}`}
           />
         </label>
         <label>
           Status
-          <input readOnly value={appointment.status} />
+          <input readOnly defaultValue={appointment.status} />
         </label>
         <label>
           Reason
@@ -48,13 +48,13 @@ export default async function AppointmentDetails({
             <input
               type="datetime-local"
               name="date"
-              value={appointment.scheduled.toISOString().split(".")[0]}
+              defaultValue={appointment.scheduled.toISOString().split(".")[0]}
             />
           </label>
         </fieldset>
         <label>
           Room Number:
-          <input readOnly value={appointment.roomNo} />
+          <input readOnly defaultValue={appointment.roomNo} />
         </label>
 
         <input type="submit" name="cancel" value="Cancel Appointment" />
