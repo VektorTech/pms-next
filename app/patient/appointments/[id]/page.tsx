@@ -1,42 +1,60 @@
-export default function AppointmentDetails() {
+import { PrismaClient } from "@prisma/client";
+import { redirect } from "next/navigation";
+
+export default async function AppointmentDetails({
+  params,
+}: {
+  params: { id: string };
+}) {
+  const prisma = new PrismaClient();
+  const appointment = await prisma.appointment.findUnique({
+    where: { id: Number.parseInt(params.id) },
+    include: {
+      doctor: { select: { user: true } },
+      patient: { select: { user: true } },
+    },
+  });
+  if (!appointment) redirect("/patient");
+
   return (
     <main>
       <form method="POST" action="/patient/appointments/new/api">
-        <h1>Create New Appointment</h1>
+        <h1>View/Edit Appointment</h1>
         <label>
           Patient
-          <input readOnly value={"Rand Name"} />
+          <input
+            readOnly
+            value={`${appointment.patient.user.firstName} ${appointment.patient.user.lastName}`}
+          />
         </label>
         <label>
           Doctor
-          <input readOnly value={"Dr. Rose"} />
+          <input
+            readOnly
+            value={`${appointment.doctor.user.firstName} ${appointment.doctor.user.lastName}`}
+          />
         </label>
         <label>
           Status
-          <input readOnly value={"Pending"} />
+          <input readOnly value={appointment.status} />
         </label>
         <label>
           Reason
-          <textarea></textarea>
+          <textarea>{appointment.reason}</textarea>
         </label>
         <fieldset>
           <legend>Date & Time</legend>
           <label>
-            <input type="date" name="date" placeholder="" />
-          </label>
-          <label>
-            <input type="time" name="time" placeholder="" />
+            <input
+              type="datetime-local"
+              name="date"
+              value={appointment.scheduled.toISOString().split(".")[0]}
+            />
           </label>
         </fieldset>
         <label>
           Room Number:
-          <input readOnly value="2" />
-        </label>
-        <label>
-          <input list="doctors" name="doctor" placeholder="Doctor" />
-          <datalist id="doctors">
-            <option value="05">Dr. Isaac</option>
-          </datalist>
+          <input readOnly value={appointment.roomNo} />
         </label>
 
         <input type="submit" name="cancel" value="Cancel Appointment" />

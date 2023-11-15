@@ -10,19 +10,19 @@ export default async function NewAppointment() {
         <h1>Create New Appointment</h1>
         <label>
           Reason
-          <textarea></textarea>
+          <textarea required name="reason"></textarea>
         </label>
         <fieldset>
           <legend>Date & Time</legend>
           <label>
-            <input type="date" name="date" placeholder="" />
+            <input required type="date" name="date" placeholder="" />
           </label>
           <label>
-            <input type="time" name="time" placeholder="" />
+            <input required type="time" name="time" placeholder="" />
           </label>
         </fieldset>
         <label>
-          <input list="doctors" name="doctor" placeholder="Doctor" />
+          <input required list="doctors" name="doctor" placeholder="Doctor" />
           <datalist id="doctors">
             {allDoctors.map((doctor) => (
               <option key={doctor.userId} value={doctor.userId}>
