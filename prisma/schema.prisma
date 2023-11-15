@@ -62,6 +62,7 @@ model Doctor {
   userId       Int           @unique
   specialty    String        @default("Physician")
   appointments Appointment[]
+  roomNo       Int
 }
 
 model Appointment {
