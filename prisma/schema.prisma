@@ -50,7 +50,7 @@ model User {
 }
 
 model Patient {
-  user             User            @relation(fields: [userId], references: [id])
+  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId           Int             @unique
   insuranceDetails String?
   medicalDetails   MedicalDetails?
@@ -58,7 +58,7 @@ model Patient {
 }
 
 model Doctor {
-  user         User          @relation(fields: [userId], references: [id])
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId       Int           @unique
   specialty    String        @default("Physician")
   appointments Appointment[]
@@ -66,9 +66,9 @@ model Doctor {
 
 model Appointment {
   id        Int               @id @default(autoincrement())
-  doctor    Doctor            @relation(fields: [doctorId], references: [userId])
+  doctor    Doctor            @relation(fields: [doctorId], references: [userId], onDelete: Cascade)
   doctorId  Int
-  patient   Patient           @relation(fields: [patientId], references: [userId])
+  patient   Patient           @relation(fields: [patientId], references: [userId], onDelete: Cascade)
   patientId Int
   reason    String
   scheduled DateTime
@@ -78,7 +78,7 @@ model Appointment {
 
 model MedicalDetails {
   id           Int      @id @default(autoincrement())
-  patient      Patient  @relation(fields: [patientId], references: [userId])
+  patient      Patient  @relation(fields: [patientId], references: [userId], onDelete: Cascade)
   patientId    Int      @unique
   bloodType    String
   weight       Float
