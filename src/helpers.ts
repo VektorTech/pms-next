@@ -25,3 +25,17 @@ export async function confirmAdminUser() {
     redirect("/login");
   }
 }
+
+export function getUserInfoFromCookie() {
+  try {
+    const cookieStore = cookies();
+    const jwtToken = cookieStore.get("session_id");
+    if (jwtToken && jwtToken.value && process.env.JWT_SECRET) {
+      const decoded = verify(jwtToken.value, process.env.JWT_SECRET);
+      return decoded as UserTokenPayload;
+    }
+    redirect("/login");
+  } catch (e) {
+    redirect("/login");
+  }
+}

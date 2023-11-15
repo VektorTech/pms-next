@@ -1,18 +1,21 @@
-import { cookies } from "next/headers";
-import jwt from "jsonwebtoken";
-import { redirect } from "next/navigation";
 import { UserTokenPayload } from "@/src/types";
 import { PrismaClient } from "@prisma/client";
 import Link from "next/link";
+import { getUserInfoFromCookie } from "@/src/helpers";
 
 export default async function PatientPortal() {
-  const user = getUserInfoFromCookie();
-  const appointments = await getUserAppointments(user);
+  const userPayload = getUserInfoFromCookie();
+  const appointments = await getUserAppointments(userPayload);
+  const user = (await getUserInfo(userPayload))!;
 
   return (
     <div>
       <h1>Patient Portal</h1>
       <h2>Your Appointments</h2>
+
+      {user.role == "ADMIN" && (
+        <Link href="/doctor/register">Register New Doctor</Link>
+      )}
 
       <table>
         <thead>
@@ -58,16 +61,7 @@ function getUserAppointments(user: UserTokenPayload) {
   return prisma.appointment.findMany({ where: { patientId: user.user_id } });
 }
 
-function getUserInfoFromCookie() {
-  try {
-    const cookieStore = cookies();
-    const jwtToken = cookieStore.get("session_id");
-    if (jwtToken && jwtToken.value && process.env.JWT_SECRET) {
-      const decoded = jwt.verify(jwtToken.value, process.env.JWT_SECRET);
-      return decoded as UserTokenPayload;
-    }
-    redirect("/login");
-  } catch (e) {
-    redirect("/login");
-  }
+function getUserInfo(user: UserTokenPayload) {
+  const prisma = new PrismaClient();
+  return prisma.user.findUnique({ where: { id: user.user_id } });
 }
