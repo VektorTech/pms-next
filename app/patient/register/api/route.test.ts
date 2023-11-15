@@ -2,7 +2,7 @@ import { POST } from "./route";
 import { describe, expect, it } from "@jest/globals";
 
 describe("POST /patient/register/api", function () {
-  it("Creates a new user as patient", async function () {
+  it("Register a new patient user account", async function () {
     const formData = new FormData();
     formData.append("firstName", "John");
     formData.append("lastName", "Brown");

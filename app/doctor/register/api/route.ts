@@ -2,13 +2,15 @@ import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 
 const prisma = new PrismaClient();
 
 const schema = zfd.formData({
   firstName: zfd.text(),
+  middleName: zfd.text(),
   lastName: zfd.text(),
+  specialty: zfd.text(),
+  roomNo: zfd.numeric(),
   gender: zfd.text(z.string().regex(/^(FE)?MALE$/i)),
   dateOfBirth: zfd.text(z.string().regex(/^[0-9]{4}(-[0-9]{2}){2}$/)),
   address: zfd.text(),
@@ -20,18 +22,21 @@ const schema = zfd.formData({
 export async function POST(request: Request) {
   const {
     firstName,
+    middleName,
     lastName,
+    specialty,
     gender,
     dateOfBirth,
     address,
     phone,
+    roomNo,
     email,
     password,
   } = schema.parse(await request.formData());
   const isRegistered = !!(await prisma.user.count({ where: { email } }));
   if (isRegistered) {
     return Response.json(
-      { message: "User Already Registered. Please Login." },
+      { message: "Doctor Already Registered." },
       { status: 409 }
     );
   }
@@ -41,6 +46,7 @@ export async function POST(request: Request) {
       email,
       passwordHash: encryptPassword,
       firstName,
+      middleName,
       lastName,
       gender: gender.toUpperCase() as "MALE" | "FEMALE",
       dob: new Date(dateOfBirth),
@@ -52,26 +58,12 @@ export async function POST(request: Request) {
         "",
     },
   });
-  await prisma.patient.create({
+  await prisma.doctor.create({
     data: {
       userId: newUser.id,
+      roomNo,
+      specialty,
     },
   });
-  const jwtToken = jwt.sign(
-    { user_id: newUser.id, email, type: "patient-user" },
-    process.env.JWT_SECRET!,
-    {
-      expiresIn: "1h",
-    }
-  );
-  return Response.json(
-    { message: "Successfully created" },
-    {
-      status: 302,
-      headers: {
-        Location: "/patient",
-        "Set-Cookie": `session_id=${jwtToken}; Path=/; HTTPOnly; SameSite=Strict; Secure`,
-      },
-    }
-  );
+  return Response.json({ message: "Successfully created" });
 }
