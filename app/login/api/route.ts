@@ -1,14 +1,49 @@
 import { PrismaClient } from "@prisma/client";
+import { z } from "zod";
+import { zfd } from "zod-form-data";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 const prisma = new PrismaClient();
 
+const schema = zfd.formData({
+  email: zfd.text(z.string().email()),
+  password: zfd.text(),
+});
+
 export async function POST(request: Request) {
-  const formData = await request.formData();
-  await prisma.patient.create({
-    data: {
-      email: formData.get("email") as string,
-      password: formData.get("password") as string,
-    },
+  const { email, password } = schema.parse(await request.formData());
+  const user = await prisma.user.findUnique({ where: { email } });
+  if (!user) {
+    return Response.redirect(request.url);
+  }
+  const isPasswordMatch = await bcrypt.compare(password, user.passwordHash);
+  if (!isPasswordMatch) {
+    return Response.redirect(request.url);
+  }
+  const patientUser = await prisma.patient.findUnique({
+    where: { userId: user.id },
   });
-  return Response.json({ message: "Success" });
+  const jwtToken = jwt.sign(
+    {
+      user_id: user.id,
+      email,
+      type: patientUser ? "patient-user" : "doctor-user",
+    },
+    process.env.JWT_SECRET!,
+    {
+      expiresIn: "1h",
+    }
+  );
+  const newLocation = !!patientUser ? "/patient" : "/doctor";
+  return Response.json(
+    { message: "Successful login" },
+    {
+      status: 302,
+      headers: {
+        Location: newLocation,
+        "Set-Cookie": `session_id=${jwtToken}; Path=/; HTTPOnly; SameSite=Strict; Secure`,
+      },
+    }
+  );
 }

@@ -4,11 +4,19 @@ export default function Login() {
   return (
     <main className="">
       <form method="POST" action="/login/api">
-        <input type="email" name="email" placeholder="Email" />
-        <input type="password" name="password" placeholder="Password" />
+        <h1>Login</h1>
+        <input type="email" name="email" required placeholder="Email" />
+        <input
+          type="password"
+          name="password"
+          required
+          placeholder="Password"
+        />
         <input type="submit" value="Login" />
       </form>
-      <p><Link href="/patient/register">Register Here</Link></p>
+      <p>
+        <Link href="/patient/register">Register Here</Link>
+      </p>
     </main>
   );
 }
