@@ -12,7 +12,7 @@ export default async function PatientPortal() {
   return (
     <div>
       <h1>Patient Portal</h1>
-      <h2>Appointments</h2>
+      <h2>Your Appointments</h2>
 
       <table>
         <thead>
@@ -22,7 +22,9 @@ export default async function PatientPortal() {
             <th>Room No.</th>
             <th>Reason</th>
             <th>
-              <Link className="bg-blue-300" href="/patient/appointments/new">Create New</Link>
+              <Link className="bg-blue-300" href="/patient/appointments/new">
+                Create New
+              </Link>
             </th>
           </tr>
         </thead>
@@ -57,11 +59,15 @@ function getUserAppointments(user: UserTokenPayload) {
 }
 
 function getUserInfoFromCookie() {
-  const cookieStore = cookies();
-  const jwtToken = cookieStore.get("session_id");
-  if (jwtToken && jwtToken.value && process.env.JWT_SECRET) {
-    const decoded = jwt.verify(jwtToken.value, process.env.JWT_SECRET);
-    return decoded as UserTokenPayload;
+  try {
+    const cookieStore = cookies();
+    const jwtToken = cookieStore.get("session_id");
+    if (jwtToken && jwtToken.value && process.env.JWT_SECRET) {
+      const decoded = jwt.verify(jwtToken.value, process.env.JWT_SECRET);
+      return decoded as UserTokenPayload;
+    }
+    redirect("/login");
+  } catch (e) {
+    redirect("/login");
   }
-  redirect("/login");
 }
