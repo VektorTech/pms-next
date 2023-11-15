@@ -26,9 +26,14 @@ export default async function RootLayout({
         <header>
           <ul>
             {user && (
-              <li>
-                <Link href="/logout/api">Logout</Link>
-              </li>
+              <>
+                <li>
+                  <Link href="/patient/account">Account</Link>
+                </li>
+                <li>
+                  <Link href="/logout/api">Logout</Link>
+                </li>
+              </>
             )}
           </ul>
         </header>
