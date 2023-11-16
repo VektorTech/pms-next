@@ -1,3 +1,4 @@
+import { getUserInfoFromCookie } from "@/src/helpers";
 import { PrismaClient } from "@prisma/client";
 import { redirect } from "next/navigation";
 
@@ -14,11 +15,12 @@ export default async function AppointmentDetails({
       patient: { select: { user: true } },
     },
   });
+  const userPayload = await getUserInfoFromCookie();
   if (!appointment) redirect("/patient");
 
   return (
     <main>
-      <form method="POST" action="/patient/appointments/new/api">
+      <form method="POST" action={`/patient/appointments/${params.id}/api`}>
         <h1>View/Edit Appointment</h1>
         <label>
           Patient
@@ -40,7 +42,7 @@ export default async function AppointmentDetails({
         </label>
         <label>
           Reason
-          <textarea>{appointment.reason}</textarea>
+          <textarea name="reason" defaultValue={appointment.reason}></textarea>
         </label>
         <fieldset>
           <legend>Date & Time</legend>
@@ -57,14 +59,33 @@ export default async function AppointmentDetails({
           <input readOnly defaultValue={appointment.roomNo} />
         </label>
 
-        <input type="submit" name="cancel" value="Cancel Appointment" />
+        <input type="hidden" name="appointmentId" value={params.id} />
 
-        <input type="submit" name="approve" value="Approve Appointment" />
-        <input type="submit" name="decline" value="Decline Appointment" />
-        <input type="submit" name="complete" value="Mark As Complete" />
-        <input type="submit" name="missed" value="Mark As Missed" />
+        {userPayload.type == "patient-user" && (
+          <>
+            <input
+              disabled={
+                !(
+                  appointment.status == "PENDING" ||
+                  appointment.status == "APPROVED"
+                )
+              }
+              type="submit"
+              name="cancel"
+              value="Cancel Appointment"
+            />
+            <input type="submit" name="update" value="Update" />
+          </>
+        )}
 
-        <input type="submit" name="cancel" value="Update" />
+        {userPayload.type == "doctor-user" && (
+          <>
+            <input type="submit" name="approve" value="Approve Appointment" />
+            <input type="submit" name="decline" value="Decline Appointment" />
+            <input type="submit" name="complete" value="Mark As Complete" />
+            <input type="submit" name="missed" value="Mark As Missed" />
+          </>
+        )}
       </form>
     </main>
   );

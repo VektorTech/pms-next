@@ -8,7 +8,11 @@ export default async function AccountDetails() {
 
   return (
     <main className="">
-      <form method="POST" action="" className="flex flex-col">
+      <form
+        method="POST"
+        action="/patient/account/api"
+        className="flex flex-col"
+      >
         <h1></h1>
 
         <fieldset>
@@ -44,7 +48,7 @@ export default async function AccountDetails() {
 
         <label>
           Gender
-          <select name="gender" required value={user.gender}>
+          <select name="gender" required defaultValue={user.gender}>
             <option value="MALE">Male</option>
             <option value="FEMALE">Female</option>
           </select>
