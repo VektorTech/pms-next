@@ -2,7 +2,7 @@ export function GET() {
   return Response.json(
     { message: "Logged Out" },
     {
-      status: 302,
+      status: 301,
       headers: {
         Location: "/",
         "Set-Cookie":

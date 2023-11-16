@@ -15,11 +15,11 @@ export async function POST(request: Request) {
   const { email, password } = schema.parse(await request.formData());
   const user = await prisma.user.findUnique({ where: { email } });
   if (!user) {
-    return Response.redirect(request.url);
+    return Response.redirect(request.url.replace("/api", ""));
   }
   const isPasswordMatch = await bcrypt.compare(password, user.passwordHash);
   if (!isPasswordMatch) {
-    return Response.redirect(request.url);
+    return Response.redirect(request.url.replace("/api", ""));
   }
   const patientUser = await prisma.patient.findUnique({
     where: { userId: user.id },
