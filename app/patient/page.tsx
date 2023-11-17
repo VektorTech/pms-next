@@ -46,7 +46,7 @@ export default async function PatientPortal() {
                 className="tr border-b border-b-zinc-200 text-sm"
                 key={appointment.id}
               >
-                <td>{appointment.scheduled.toUTCString()}</td>
+                <td>{appointment.scheduled.toString()}</td>
                 <td>{appointment.status}</td>
                 <td>Dr. {appointment.doctor.user.lastName}</td>
                 <td>{appointment.roomNo}</td>

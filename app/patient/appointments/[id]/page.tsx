@@ -96,6 +96,7 @@ export default async function AppointmentDetails({
                 className="button bg-red-400"
               />
               <input
+                disabled={appointment.status !== "PENDING"}
                 type="submit"
                 name="update"
                 value="Update"
@@ -107,24 +108,44 @@ export default async function AppointmentDetails({
           {userPayload.type == "doctor-user" && (
             <>
               <input
+                disabled={
+                  !(
+                    appointment.status == "PENDING" ||
+                    appointment.status == "DECLINED"
+                  )
+                }
                 type="submit"
                 name="approve"
                 value="Approve Appointment"
                 className="button bg-green-600"
               />
               <input
+                disabled={
+                  !(
+                    appointment.status == "PENDING" ||
+                    appointment.status == "APPROVED"
+                  )
+                }
                 type="submit"
                 name="decline"
                 value="Decline Appointment"
                 className="button bg-red-400"
               />
               <input
+                disabled={
+                  appointment.status !== "APPROVED" ||
+                  appointment.scheduled.valueOf() > Date.now()
+                }
                 type="submit"
                 name="complete"
                 value="Mark As Complete"
                 className="button"
               />
               <input
+                disabled={
+                  appointment.status !== "APPROVED" ||
+                  appointment.scheduled.valueOf() > Date.now()
+                }
                 type="submit"
                 name="missed"
                 value="Mark As Missed"
