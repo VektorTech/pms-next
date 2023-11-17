@@ -1,3 +1,4 @@
+import { sendMail } from "@/src/sendMail";
 import { UserTokenPayload } from "@/src/types";
 import { PrismaClient } from "@prisma/client";
 import { verify } from "jsonwebtoken";
@@ -52,16 +53,35 @@ export async function POST(request: Request) {
     }
 
     if (decoded.type == "doctor-user") {
-      await prisma.appointment.update({
+      const _status =
+        (!!approve && "APPROVED") ||
+        (!!decline && "DECLINED") ||
+        (!!complete && "COMPLETED") ||
+        (!!missed && "MISSED") ||
+        "PENDING";
+      const _appointment = await prisma.appointment.update({
         where: { id: appointmentId, doctorId: decoded.user_id },
         data: {
-          status:
-            (!!approve && "APPROVED") ||
-            (!!decline && "DECLINED") ||
-            (!!complete && "COMPLETED") ||
-            (!!missed && "MISSED") || "PENDING",
+          status: _status,
+        },
+        include: {
+          patient: {
+            select: { user: { select: { email: true, firstName: true } } },
+          },
+          doctor: {
+            select: { user: { select: { lastName: true } } },
+          },
         },
       });
+      await sendMail(
+        _appointment.patient.user.email,
+        `Update regarding your appointment: #${appointmentId}`,
+        `<p>Dear ${
+          _appointment.patient.user.firstName
+        },</p><p>Your appointment scheduled for ${_appointment.scheduled.toString()} with Dr. ${
+          _appointment.doctor.user.lastName
+        } has been marked: ${_status}.</p>`
+      );
     }
 
     return Response.redirect(request.url.replace("/api", ""));

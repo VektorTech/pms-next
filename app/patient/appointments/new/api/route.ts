@@ -3,6 +3,7 @@ import { zfd } from "zod-form-data";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { UserTokenPayload } from "@/src/types";
+import { sendMail } from "@/src/sendMail";
 
 const prisma = new PrismaClient();
 
@@ -25,6 +26,7 @@ export async function POST(request: Request) {
     ) as UserTokenPayload;
     const requestedDoctor = await prisma.doctor.findUnique({
       where: { userId: doctor },
+      include: { user: { select: { email: true, lastName: true } } },
     });
     if (!requestedDoctor)
       return Response.json({ message: "Doctor not registered" });
@@ -38,6 +40,12 @@ export async function POST(request: Request) {
         roomNo: requestedDoctor.roomNo,
       },
     });
+
+    await sendMail(
+      requestedDoctor.user.email,
+      "New Appointment Request.",
+      `<p>Dear Dr. ${requestedDoctor.user.lastName},</p><p>You have a request for an appointment on ${date} at ${time} regarding:<br><i>${reason}</i></p><p>Regards.</p>`
+    ).catch(console.log);
 
     return Response.json(
       { message: "Success" },

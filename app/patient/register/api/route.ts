@@ -3,6 +3,7 @@ import { z } from "zod";
 import { zfd } from "zod-form-data";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import { sendMail } from "@/src/sendMail";
 
 const prisma = new PrismaClient();
 
@@ -64,6 +65,13 @@ export async function POST(request: Request) {
       expiresIn: "1h",
     }
   );
+
+  await sendMail(
+    email,
+    "Your account has been successfully registered.",
+    `<p>Dear ${firstName},</p><p>Your account has been successfully registered on Central Medical's Patient Portal.</p><p>Regards.</p>`
+  ).catch(console.log);
+
   return Response.json(
     { message: "Successfully created" },
     {

@@ -30,7 +30,7 @@ export default async function RootLayout({
                 <Link href="/">Central Medical</Link>
               </li>
               <li className="ml-auto">
-                <Link href="/patient/account">Account</Link>
+                <Link href="/account">Account</Link>
               </li>
               <li>
                 <a href="/logout/api">Logout</a>
