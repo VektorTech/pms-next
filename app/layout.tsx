@@ -22,21 +22,22 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <header>
-          <ul>
-            {user && (
-              <>
-                <li>
-                  <Link href="/patient/account">Account</Link>
-                </li>
-                <li>
-                  <Link href="/logout/api">Logout</Link>
-                </li>
-              </>
-            )}
-          </ul>
-        </header>
+      <body className={inter.className + " flex flex-col"}>
+        {user && (
+          <header className="h-12 w-full">
+            <ul className="fixed px-5 w-full gap-x-4 h-12 flex items-center bg-sky-600 text-white">
+              <li>
+                <Link href="/">Central Medical</Link>
+              </li>
+              <li className="ml-auto">
+                <Link href="/patient/account">Account</Link>
+              </li>
+              <li>
+                <a href="/logout/api">Logout</a>
+              </li>
+            </ul>
+          </header>
+        )}
         {children}
       </body>
     </html>

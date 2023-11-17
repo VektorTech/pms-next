@@ -5,34 +5,56 @@ export default async function NewAppointment() {
   const allDoctors = await prisma.doctor.findMany({ include: { user: true } });
 
   return (
-    <main>
-      <form method="POST" action="/patient/appointments/new/api">
-        <h1>Create New Appointment</h1>
-        <label>
+    <main className="container">
+      <form
+        className="flex flex-col space-y-4 max-w-md mx-auto"
+        method="POST"
+        action="/patient/appointments/new/api"
+      >
+        <h1 className="heading-1 mt-10">Create New Appointment</h1>
+        <label className="label">
           Reason
-          <textarea required name="reason"></textarea>
+          <textarea
+            className="text-box p-3 h-20"
+            required
+            name="reason"
+          ></textarea>
         </label>
-        <fieldset>
-          <legend>Date & Time</legend>
-          <label>
-            <input required type="date" name="date" placeholder="" />
+        <fieldset className="flex flex-wrap">
+          <legend className="w-full">Date & Time</legend>
+          <label className="label basis-1/2">
+            <input
+              className="text-box w-[98%]"
+              required
+              type="date"
+              name="date"
+            />
           </label>
-          <label>
-            <input required type="time" name="time" placeholder="" />
+          <label className="label basis-1/2">
+            <input
+              className="text-box w-[98%] ml-auto"
+              required
+              type="time"
+              name="time"
+            />
           </label>
         </fieldset>
-        <label>
-          <input required list="doctors" name="doctor" placeholder="Doctor" />
-          <datalist id="doctors">
+        <label className="label">
+          <select
+            className="text-box"
+            required
+            name="doctor"
+            placeholder="Doctor"
+          >
             {allDoctors.map((doctor) => (
               <option key={doctor.userId} value={doctor.userId}>
                 Dr. {doctor.user.middleName?.substring(0, 1)}{" "}
                 {doctor.user.lastName} - {doctor.specialty}
               </option>
             ))}
-          </datalist>
+          </select>
         </label>
-        <input type="submit" value="Book Appointment" />
+        <input className="button" type="submit" value="Book Appointment" />
       </form>
     </main>
   );
