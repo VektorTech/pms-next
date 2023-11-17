@@ -44,7 +44,7 @@ body {
   }
 
   .button {
-    @apply bg-blue-500 text-sm py-2 px-3 rounded-sm text-white cursor-pointer;
+    @apply bg-blue-500 text-sm py-2 px-3 rounded-sm text-white cursor-pointer disabled:opacity-40;
   }
 
   .button-outline {
