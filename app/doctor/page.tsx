@@ -30,9 +30,9 @@ export default async function PatientPortal() {
         <table className="w-full mt-5 min-w-[320px]">
           <thead className="text-left whitespace-nowrap">
             <tr className="tr border-b border-b-zinc-200">
-              <th>Date Scheduled</th>
+              <th>Scheduled for</th>
               <th>Status</th>
-              <th>Patient Details</th>
+              <th>Patient</th>
               <th>Reason</th>
             </tr>
           </thead>
@@ -42,9 +42,17 @@ export default async function PatientPortal() {
                 className="tr border-b border-b-zinc-200 text-sm"
                 key={appointment.id}
               >
-                <td>{appointment.scheduled.toDateString()}</td>
+                <td>{appointment.scheduled.toString()}</td>
                 <td>{appointment.status}</td>
-                <td>{appointment.roomNo}</td>
+                <td>
+                  <Link
+                    className="underline text-blue-500"
+                    href={`/account/${appointment.patient.user.id}`}
+                  >
+                    {appointment.patient.user.firstName}{" "}
+                    {appointment.patient.user.lastName}
+                  </Link>
+                </td>
                 <td>{appointment.reason}</td>
                 <td>
                   <Link
@@ -70,7 +78,16 @@ export default async function PatientPortal() {
 
 function getAppointments(user: UserTokenPayload) {
   const prisma = new PrismaClient();
-  return prisma.appointment.findMany({ where: { doctorId: user.user_id } });
+  return prisma.appointment.findMany({
+    where: { doctorId: user.user_id },
+    include: {
+      patient: {
+        select: {
+          user: { select: { firstName: true, lastName: true, id: true } },
+        },
+      },
+    },
+  });
 }
 
 function getUserInfoFromCookie() {
