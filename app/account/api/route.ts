@@ -81,3 +81,31 @@ export async function POST(request: Request) {
     );
   }
 }
+
+export async function DELETE(request: Request) {
+  try {
+    const password = (await request.formData()).get("password");
+    const cookieStore = cookies();
+    const jwtToken = cookieStore.get("session_id");
+    const decoded = verify(
+      jwtToken!.value,
+      process.env.JWT_SECRET!
+    ) as UserTokenPayload;
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.user_id },
+    });
+    if (!user) throw new Error();
+    const valid = bcrypt.compare(password!.toString(), user.passwordHash);
+    if (!valid) throw new Error();
+    await prisma.user.delete({ where: { id: decoded.user_id } });
+    return Response.json(
+      { message: "Account has been removed" },
+      { status: 302, headers: { Location: "/" } }
+    );
+  } catch (e) {
+    return Response.json(
+      { message: "Invalid credentials." },
+      { status: 302, headers: { Location: request.url.replace("/api", "") } }
+    );
+  }
+}
