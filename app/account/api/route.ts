@@ -1,12 +1,10 @@
-import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
 import bcrypt from "bcryptjs";
 import { verify } from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { UserTokenPayload } from "@/src/types";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/src/prismaInstance";
 
 const schema = zfd.formData({
   firstName: zfd.text(),
@@ -79,6 +77,8 @@ export async function POST(request: Request) {
         },
       }
     );
+  } finally {
+    if (process.env.VERCEL) prisma.$disconnect();
   }
 }
 

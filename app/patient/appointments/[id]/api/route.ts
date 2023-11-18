@@ -1,12 +1,10 @@
 import { sendMail } from "@/src/sendMail";
 import { UserTokenPayload } from "@/src/types";
-import { PrismaClient } from "@prisma/client";
 import { verify } from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/src/prismaInstance";
 
 const schema = zfd.formData({
   reason: zfd.text(),

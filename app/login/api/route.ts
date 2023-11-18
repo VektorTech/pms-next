@@ -1,10 +1,8 @@
-import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/src/prismaInstance";
 
 const schema = zfd.formData({
   email: zfd.text(z.string().email()),

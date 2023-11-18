@@ -1,9 +1,7 @@
-import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
 import bcrypt from "bcryptjs";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/src/prismaInstance";
 
 const schema = zfd.formData({
   firstName: zfd.text(),
