@@ -2,5 +2,7 @@
 Technical Assessment
 
 ## Admin Credentials
-email: kennymax18@gmail.com
-password: password123
+
+Email: kennymax18@gmail.com
+
+Password: password123
