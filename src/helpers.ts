@@ -39,3 +39,12 @@ export function getUserInfoFromCookie() {
     redirect("/login");
   }
 }
+
+export function formatDate() {
+  const date = new Date();
+  return `${date.getFullYear()}-${date
+    .toLocaleDateString()
+    .replace("/" + date.getFullYear(), "")
+    .split("/")
+    .join("-")}`;
+}

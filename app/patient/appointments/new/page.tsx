@@ -1,3 +1,4 @@
+import { formatDate } from "@/src/helpers";
 import { PrismaClient } from "@prisma/client";
 
 export default async function NewAppointment() {
@@ -25,6 +26,7 @@ export default async function NewAppointment() {
           <label className="label basis-1/2">
             <input
               className="text-box w-[98%]"
+              min={formatDate()}
               required
               type="date"
               name="date"
@@ -34,6 +36,9 @@ export default async function NewAppointment() {
             <input
               className="text-box w-[98%] ml-auto"
               required
+              min="09:00"
+              max="17:00"
+              step="60"
               type="time"
               name="time"
             />

@@ -1,4 +1,4 @@
-import { getUserInfoFromCookie } from "@/src/helpers";
+import { formatDate, getUserInfoFromCookie } from "@/src/helpers";
 import { PrismaClient } from "@prisma/client";
 import { redirect } from "next/navigation";
 
@@ -65,6 +65,7 @@ export default async function AppointmentDetails({
             type="datetime-local"
             name="date"
             className="text-box"
+            min={`${formatDate()}T00:00`}
             defaultValue={appointment.scheduled.toISOString().split(".")[0]}
           />
         </label>
