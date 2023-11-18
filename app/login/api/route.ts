@@ -34,6 +34,7 @@ export async function POST(request: Request) {
     }
   );
   const newLocation = !!patientUser ? "/patient" : "/doctor";
+  if (process.env.VERCEL) prisma.$disconnect();
   return Response.json(
     { message: "Successful login" },
     {

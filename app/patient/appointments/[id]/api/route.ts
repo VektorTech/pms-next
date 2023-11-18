@@ -85,5 +85,7 @@ export async function POST(request: Request) {
     return Response.redirect(request.url.replace("/api", ""));
   } catch (e) {
     return Response.redirect(request.url.replace("/api", ""));
+  } finally {
+    if (process.env.VERCEL) prisma.$disconnect();
   }
 }

@@ -70,6 +70,8 @@ export async function POST(request: Request) {
     `<p>Dear ${firstName},</p><p>Your account has been successfully registered on Central Medical's Patient Portal.</p><p>Regards.</p>`
   ).catch(console.log);
 
+  if (process.env.VERCEL) prisma.$disconnect();
+  
   return Response.json(
     { message: "Successfully created" },
     {

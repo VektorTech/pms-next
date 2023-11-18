@@ -63,5 +63,6 @@ export async function POST(request: Request) {
       specialty,
     },
   });
+  if (process.env.VERCEL) prisma.$disconnect();
   return Response.json({ message: "Successfully created" });
 }
