@@ -24,7 +24,7 @@ export default async function RootLayout({
     <html lang="en">
       <body className={inter.className + " flex flex-col"}>
         {user && (
-          <header className="h-12 w-full">
+          <header className="pb-12 w-full">
             <ul className="fixed px-5 w-full gap-x-4 h-12 flex items-center bg-sky-600 text-white">
               <li>
                 <Link href="/">Central Medical</Link>
