@@ -7,11 +7,11 @@ export default async function AccountDetails() {
   const user = (await getUserInfo(userPayload))!;
 
   return (
-    <main className="container">
+    <main className="container pt-8 pb-14">
       <form
         className="flex flex-col space-y-4 max-w-md mx-auto"
         method="POST"
-        action="/patient/account/api"
+        action="/account/api"
       >
         <h1 className="heading-1 mt-10">Edit Account Details</h1>
         <fieldset className="flex flex-col gap-y-2">
@@ -97,6 +97,21 @@ export default async function AccountDetails() {
           className="text-box"
         />
         <input className="button" type="submit" defaultValue="Update" />
+      </form>
+
+      <hr className="max-w-md mx-auto my-8" />
+      
+      <form className="block max-w-md mx-auto space-y-3" method="DELETE" action="/account/api">
+        <h2 className="font-semibold text-xl">Delete Account</h2>
+        <p className="text-zinc-500 uppercase text-sm">This action is irreversible!</p>
+        <input
+          type="password"
+          name="password"
+          placeholder="Password"
+          required
+          className="text-box w-full"
+        />
+        <input type="submit" className="button bg-red-500 w-full" value="Delete Account" />
       </form>
     </main>
   );
