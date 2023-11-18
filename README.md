@@ -1,4 +1,6 @@
 # Patient Management System
 Technical Assessment
 
-## Start
+## Admin Credentials
+email: kennymax18@gmail.com
+password: password123
