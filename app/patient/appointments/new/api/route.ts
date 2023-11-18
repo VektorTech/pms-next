@@ -1,11 +1,9 @@
-import { PrismaClient } from "@prisma/client";
 import { zfd } from "zod-form-data";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { UserTokenPayload } from "@/src/types";
 import { sendMail } from "@/src/sendMail";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/src/prismaInstance";
 
 const schema = zfd.formData({
   reason: zfd.text(),
@@ -66,5 +64,7 @@ export async function POST(request: Request) {
         },
       }
     );
+  } finally {
+    if (process.env.VERCEL) prisma.$disconnect();
   }
 }

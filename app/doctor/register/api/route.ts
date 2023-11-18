@@ -1,9 +1,7 @@
-import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
 import { zfd } from "zod-form-data";
 import bcrypt from "bcryptjs";
-
-const prisma = new PrismaClient();
+import { prisma } from "@/src/prismaInstance";
 
 const schema = zfd.formData({
   firstName: zfd.text(),
@@ -65,5 +63,6 @@ export async function POST(request: Request) {
       specialty,
     },
   });
+  if (process.env.VERCEL) prisma.$disconnect();
   return Response.json({ message: "Successfully created" });
 }
