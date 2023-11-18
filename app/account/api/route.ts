@@ -77,8 +77,6 @@ export async function POST(request: Request) {
         },
       }
     );
-  } finally {
-    if (process.env.VERCEL) prisma.$disconnect();
   }
 }
 
@@ -107,7 +105,5 @@ export async function DELETE(request: Request) {
       { message: "Invalid credentials." },
       { status: 302, headers: { Location: request.url.replace("/api", "") } }
     );
-  } finally {
-    if (process.env.VERCEL) prisma.$disconnect();
   }
 }
