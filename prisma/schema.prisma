@@ -66,7 +66,7 @@ model Doctor {
 }
 
 model Appointment {
-  id        Int               @id @default(autoincrement())
+  id        Int               @unique @default(autoincrement())
   doctor    Doctor            @relation(fields: [doctorId], references: [userId], onDelete: Cascade)
   doctorId  Int
   patient   Patient           @relation(fields: [patientId], references: [userId], onDelete: Cascade)
@@ -75,6 +75,8 @@ model Appointment {
   scheduled DateTime
   roomNo    Int
   status    AppointmentStatus
+
+  @@id([doctorId, scheduled])
 }
 
 model MedicalDetails {
